@@ -8,14 +8,14 @@
 
     - name: Build haproxy docker image
       docker_image:
-        name: haproxy_helloworld
+        name: haproxy_hello
         path: /tmp/build
         force: yes
 
     - name: Run haproxy docker container
       docker_container:
-        name: haproxy_helloworld
-        image: haproxy_helloworld
+        name: haproxy_hello
+        image: haproxy_hello
         published_ports: 8000:8000
         restart: yes
         
