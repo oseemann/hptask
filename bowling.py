@@ -1,6 +1,19 @@
 import unittest
 
 
+"""
+This module implements calculating the total score of a bowling game by adding
+individual scores of each frame plus possible bonuses. It only returns the
+total score of the game, not individual scores of frames. However, it will also
+return the current score of an incomplete game (<10 frames).
+
+The code intentionally misses sanity and bounds checks for brevity and
+readability. Any production version of this function would need to ensure that
+any assumptions on the given arguments are valid (i.e. max 10 points for sum of
+both rolls, 3 rolls only in last frame,  max 10 frames, etc.).
+"""
+
+
 def totalscore(frames, prev_spare=False, prev_strike=False):
     if not frames:
         return 0
@@ -10,15 +23,15 @@ def totalscore(frames, prev_spare=False, prev_strike=False):
     strike = roll1 == 10
     spare = not strike and roll1 + roll2 == 10
 
-    # add scores of current frames plus the totalled scores of all following
+    # Add scores of current frames plus the totalled scores of all following
     # frames, which will include the bonuses of the current frame
     score = roll1 + roll2 + totalscore(frames[1:], spare, strike)
 
-    # add spare and strike bonuses for previous frame
+    # Add spare and strike bonuses for previous frame
     score += roll1 * prev_spare
     score += (roll1 + roll2) * prev_strike
 
-    # last frame: if 3 rolls and strike/spare, add last roll
+    # Last frame: if 3 rolls and strike/spare, add last roll
     score += frames[0][2] if (strike or spare) and len(frames[0]) == 3 else 0
 
     return score
