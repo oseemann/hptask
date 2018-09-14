@@ -12,7 +12,9 @@ each game.
 
 Example:
 
-`python bowling/score.py "10,0 10,0, 10,0 10,0 10,0 10,0 10,0 10,0 10,0 10,10,10"
+```
+python bowling/score.py "10,0 10,0, 10,0 10,0 10,0 10,0 10,0 10,0 10,0 10,10,10"
+```
 
 
 Task 2
@@ -25,7 +27,9 @@ To use a different host just change the `haproxy/inventory` file.
 
 To run the ansible playbook use the following command:
 
-`ansible-playbook -i haproxy/inventory  haproxy/hello.yaml`
+```
+ansible-playbook -i haproxy/inventory  haproxy/hello.yaml
+```
 
 If all goes well, the URL http://localhost:8000/hello should return the desired
 content.
