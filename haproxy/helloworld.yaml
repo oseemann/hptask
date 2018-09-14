@@ -1,25 +1,10 @@
 
 - hosts: all
   tasks:
-    - name: Create build directory
-      file:
-        path: /tmp/build
-        state: directory
-
-    - name: Copy Dockerfile
+    - name: Copy build directory
       copy:
-        src: build/Dockerfile
-        dest: /tmp/build/Dockerfile
-
-    - name: Copy haproxy.cfg
-      copy:
-        src: build/haproxy.cfg
-        dest: /tmp/build/haproxy.cfg
-
-    - name: Copy hello
-      copy:
-        src: build/hello
-        dest: /tmp/build/hello
+        src: build
+        dest: /tmp
 
     - name: Build haproxy docker image
       docker_image:
