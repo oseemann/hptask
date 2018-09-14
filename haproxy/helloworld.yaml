@@ -1,0 +1,37 @@
+
+- hosts: all
+  tasks:
+    - name: Create build directory
+      file:
+        path: /tmp/build
+        state: directory
+
+    - name: Copy Dockerfile
+      copy:
+        src: build/Dockerfile
+        dest: /tmp/build/Dockerfile
+
+    - name: Copy haproxy.cfg
+      copy:
+        src: build/haproxy.cfg
+        dest: /tmp/build/haproxy.cfg
+
+    - name: Copy hello
+      copy:
+        src: build/hello
+        dest: /tmp/build/hello
+
+    - name: Build haproxy docker image
+      docker_image:
+        name: haproxy_helloworld
+        path: /tmp/build
+        force: yes
+
+    - name: Run haproxy docker container
+      docker_container:
+        name: haproxy_helloworld
+        image: haproxy_helloworld
+        published_ports: 8000:8000
+        restart: yes
+        
+# vim: set ts=2 sts=2 sw=2 et filetype=yaml:
