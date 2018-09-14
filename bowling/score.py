@@ -24,10 +24,10 @@ def totalscore(frames):
                    individual roll.
     @return Total score for all given frames
     """
-    return _totalscore(frames, False, False)
+    return _totalscore(frames, False, False, False)
 
 
-def _totalscore(frames, prev_spare, prev_strike):
+def _totalscore(frames, prev_spare, prev_strike, double_strike):
     if not frames:
         return 0
 
@@ -38,11 +38,13 @@ def _totalscore(frames, prev_spare, prev_strike):
 
     # Add scores of current frames plus the totalled scores of all following
     # frames, which will include the bonuses of the current frame
-    score = roll1 + roll2 + _totalscore(frames[1:], spare, strike)
+    score = roll1 + roll2 + _totalscore(frames[1:], spare, strike,
+                                        strike and prev_strike)
 
-    # Add spare and strike bonuses for previous frame
+    # Add spare and strike bonuses for previous frames
     score += roll1 * prev_spare
     score += (roll1 + roll2) * prev_strike
+    score += roll1 * double_strike
 
     # Last frame: if 3 rolls and strike/spare, add last roll
     score += frames[0][2] if (strike or spare) and len(frames[0]) == 3 else 0
@@ -54,7 +56,7 @@ class ScoreTest(unittest.TestCase):
     def t(self, score, frames):
         self.assertEqual(totalscore(frames), score)
 
-    def test_all(self):
+    def test_example(self):
         self.t(0, [])
         self.t(5, [(1, 4)])
         self.t(14, [(1, 4), (4, 5)])
@@ -71,6 +73,15 @@ class ScoreTest(unittest.TestCase):
                (6, 4), (10, 0), (2, 7)])
         self.t(133, [(1, 4), (4, 5), (6, 4), (5, 5), (10, 0), (0, 1), (7, 3),
                (6, 4), (10, 0), (2, 8, 6)])
+
+    def test_more(self):
+        self.t(300, [(10, 0)] * 9 + [(10, 10, 10)])  # max score
+        self.t(245, [(10, 0)] * 9 + [(1, 1, 0)])
+        self.t(180, [(9, 1)] * 9 +  [(9, 0)])
+        self.t(100, [(10, 0), (5, 0)] * 5)
+        self.t(200, [(10, 0), (5, 5)] * 4 + [(10, 0), (5, 5, 10)])
+        self.t(20, [(1, 1)] * 10)
+        self.t(0, [(0, 0)] * 10)
 
 
 if __name__ == '__main__':
