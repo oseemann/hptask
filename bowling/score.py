@@ -1,3 +1,4 @@
+import sys
 import unittest
 
 
@@ -25,6 +26,24 @@ def totalscore(frames):
     @return Total score for all given frames
     """
     return _totalscore(frames, False, False, False)
+
+
+def totalscore_fromstring(frames_str):
+    """
+    A helper that converts an entered string representation of the game scores
+    into a list as required by the `totalscore()` function.
+
+    String format: rolls separated by comma, frames separated by spaces,
+                   e.g.: "0,10 1,9 2,8 3,7 4,6 5,5 6,4 7,3 8,2 9,1"
+    """
+    return totalscore(split_frames_string(frames_str))
+
+
+def split_frames_string(frames_str):
+    return [
+        tuple(int(points) if points else 0 for points in frame.split(','))
+        for frame in frames_str.split(' ')
+    ]
 
 
 def _totalscore(frames, prev_spare, prev_strike, double_strike):
@@ -77,12 +96,31 @@ class ScoreTest(unittest.TestCase):
     def test_more(self):
         self.t(300, [(10, 0)] * 9 + [(10, 10, 10)])  # max score
         self.t(245, [(10, 0)] * 9 + [(1, 1, 0)])
-        self.t(180, [(9, 1)] * 9 +  [(9, 0)])
+        self.t(180, [(9, 1)] * 9 + [(9, 0)])
         self.t(100, [(10, 0), (5, 0)] * 5)
         self.t(200, [(10, 0), (5, 5)] * 4 + [(10, 0), (5, 5, 10)])
         self.t(20, [(1, 1)] * 10)
         self.t(0, [(0, 0)] * 10)
 
+    def test_split_frame_string(self):
+        self.assertEqual([(1, 1)], split_frames_string("1,1"))
+        self.assertEqual([(1, 1), (2, 2), (3, 3, 3)],
+                         split_frames_string("1,1 2,2 3,3,3"))
+
+    def test_with_strings(self):
+        self.assertEqual(5, totalscore_fromstring("1,4"))
+        self.assertEqual(145, totalscore_fromstring(
+                              "0,10 1,9 2,8 3,7 4,6 5,5 6,4 7,3 8,2 9,1"))
+
+
+def main(args):
+    if len(args) > 0:
+        for arg in sys.argv[1:]:
+            score = totalscore_fromstring(arg)
+            print("Score: {} for {}".format(score, arg))
+    else:
+        unittest.main()
+
 
 if __name__ == '__main__':
-    unittest.main()
+    main(sys.argv[1:])
