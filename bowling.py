@@ -14,7 +14,20 @@ both rolls, 3 rolls only in last frame,  max 10 frames, etc.).
 """
 
 
-def totalscore(frames, prev_spare=False, prev_strike=False):
+def totalscore(frames):
+    """
+    Calculate total score of a bowling game.
+
+    @param frames: A list of of frames where each frame is a list or tuple of
+                   2 rolls, optionally 3 rolls for frame #10. A roll is
+                   represented as an integer indicating the pins hit in each
+                   individual roll.
+    @return Total score for all given frames
+    """
+    return _totalscore(frames, False, False)
+
+
+def _totalscore(frames, prev_spare, prev_strike):
     if not frames:
         return 0
 
@@ -25,7 +38,7 @@ def totalscore(frames, prev_spare=False, prev_strike=False):
 
     # Add scores of current frames plus the totalled scores of all following
     # frames, which will include the bonuses of the current frame
-    score = roll1 + roll2 + totalscore(frames[1:], spare, strike)
+    score = roll1 + roll2 + _totalscore(frames[1:], spare, strike)
 
     # Add spare and strike bonuses for previous frame
     score += roll1 * prev_spare
