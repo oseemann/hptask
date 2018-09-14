@@ -48,8 +48,10 @@ def split_frames_string(frames_str):
 
 def _totalscore(frames, prev_spare, prev_strike, double_strike):
     if not frames:
+        # This is where the recursion ends
         return 0
 
+    # Find out what's in the current frame
     roll1 = frames[0][0]
     roll2 = frames[0][1]
     strike = roll1 == 10
