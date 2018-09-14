@@ -1,22 +1,18 @@
 
 - hosts: all
   tasks:
-    - name: Copy build directory
+    - name: Copy config directory
       copy:
-        src: build
-        dest: /tmp
-
-    - name: Build haproxy docker image
-      docker_image:
-        name: haproxy_hello
-        path: /tmp/build
-        force: yes
+        src: config/
+        dest: /tmp/haproxy_hello
 
     - name: Run haproxy docker container
       docker_container:
         name: haproxy_hello
-        image: haproxy_hello
+        image: haproxy:1.8.13
         published_ports: 8000:8000
         restart: yes
+        volumes:
+          - /tmp/haproxy_hello:/usr/local/etc/haproxy/
         
 # vim: set ts=2 sts=2 sw=2 et filetype=yaml:
