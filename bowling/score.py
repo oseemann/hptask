@@ -122,7 +122,7 @@ class ScoreTest(unittest.TestCase):
 
 def main(args):
     if len(args) > 0:
-        for arg in sys.argv[1:]:
+        for arg in args:
             score = totalscore_fromstring(arg)
             print("Score: {} for {}".format(score, arg))
     else:
