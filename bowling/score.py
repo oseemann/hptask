@@ -40,6 +40,10 @@ def totalscore_fromstring(frames_str):
 
 
 def split_frames_string(frames_str):
+    """
+    Splits score string into list of tuples:
+    "1,2 3,4" -> [(1, 2), (3, 4)]
+    """
     return [
         tuple(int(points) if points else 0 for points in frame.split(','))
         for frame in frames_str.split(' ')
@@ -47,6 +51,20 @@ def split_frames_string(frames_str):
 
 
 def _totalscore(frames, prev_spare, prev_strike, double_strike):
+    """
+    Calculate bowling score recursively.
+
+    Each invocation looks only at the first frame in the list and calls the
+    same function again with the remainder of the list.
+
+    @param frames: A list of frames, see `totalscore` function
+    @param prev_spare: Boolean indicating the previous frame was a spare
+    @param prev_strike: Boolean indicating the previous frame was a strike
+    @param double_strike: Boolean indicating the two previous frames where
+                          strikes
+
+    @return Cumulated score of all given frames
+    """
     if not frames:
         # This is where the recursion ends
         return 0
