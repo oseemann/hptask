@@ -119,6 +119,7 @@ class ScoreTest(unittest.TestCase):
                (6, 4), (10, 0), (2, 8, 6)])
 
     def test_more(self):
+        # Test case scores were calculated using https://bowlinggenius.com/
         self.t(300, [(10, 0)] * 9 + [(10, 10, 10)])  # max score
         self.t(245, [(10, 0)] * 9 + [(1, 1, 0)])
         self.t(180, [(9, 1)] * 9 + [(9, 0)])
