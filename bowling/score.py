@@ -52,23 +52,28 @@ def _totalscore(frames, prev_spare, prev_strike, double_strike):
         return 0
 
     # Find out what's in the current frame
-    roll1 = frames[0][0]
-    roll2 = frames[0][1]
+    frame = frames[0]
+    roll1 = frame[0]
+    roll2 = frame[1]
     strike = roll1 == 10
     spare = not strike and roll1 + roll2 == 10
 
-    # Add scores of current frames plus the totalled scores of all following
-    # frames, which will include the bonuses of the current frame
-    score = roll1 + roll2 + _totalscore(frames[1:], spare, strike,
-                                        strike and prev_strike)
+    # Start the score with both rolls
+    score = roll1 + roll2
 
     # Add spare and strike bonuses for previous frames
+    # (In Python the following expressions are true:
+    #  `3 * True == 3` and `3 * False == 0`)
     score += roll1 * prev_spare
     score += (roll1 + roll2) * prev_strike
     score += roll1 * double_strike
 
     # Last frame: if 3 rolls and strike/spare, add last roll
-    score += frames[0][2] if (strike or spare) and len(frames[0]) == 3 else 0
+    score += frame[2] if (strike or spare) and len(frame) == 3 else 0
+
+    # Add scores of current frame plus the totalled scores of all following
+    # frames, which will include the bonuses of the current frame
+    score += _totalscore(frames[1:], spare, strike, strike and prev_strike)
 
     return score
 
