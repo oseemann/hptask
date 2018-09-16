@@ -89,8 +89,8 @@ def _totalscore(frames, prev_spare, prev_strike, double_strike):
     # Last frame: if 3 rolls and strike/spare, add last roll
     score += frame[2] if (strike or spare) and len(frame) == 3 else 0
 
-    # Add scores of current frame plus the totalled scores of all following
-    # frames, which will include the bonuses of the current frame
+    # Add scores of all following frames, which will include the bonuses of
+    # the current frame.
     score += _totalscore(frames[1:], spare, strike, strike and prev_strike)
 
     return score
